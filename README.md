@@ -1,4 +1,4 @@
-# gradecalculatorbykiko
+# Grade Calculator
 A simple tool for tracking grades and forecasting required scores based on complex syllabus weightings.
 
 ## Key Features:
