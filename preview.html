@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✦ GPA Calculator ✦</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root, [data-theme="pink"] {
+      --pink:        #FFB7C5;
+      --pink-light:  #FFE4EC;
+      --pink-mid:    #FFCCD8;
+      --pink-dark:   #E8839A;
+      --pink-deep:   #C85A78;
+      --cream:       #FFFBF0;
+      --purple-lt:   #F0E8FF;
+      --purple:      #C4A8E8;
+      --purple-dk:   #9370C0;
+      --text:        #1F1F1F;
+      --text-mid:    #5C5260;
+      --text-light:  #A09BA0;
+      --inp-border:  #F5D0DA;
+      --primary-rgb:        255, 183, 197;
+      --primary-soft-rgb:   255, 228, 236;
+      --primary-faint-rgb:  255, 244, 247;
+      --secondary-soft-rgb: 240, 232, 255;
+      --bg-gradient: linear-gradient(150deg, #FFFBF0 0%, #FFF0F5 50%, #F5EEFF 100%);
+      --hdr-bg:      rgba(255, 251, 240, 0.88);
+      --gem-grad:    linear-gradient(135deg, #FFB7C5 0%, #E08AB0 100%);
+      --shadow-pink: 0 4px 20px rgba(var(--primary-rgb),0.28), 0 1px 4px rgba(var(--primary-rgb),0.12);
+      --shadow-hover: 0 8px 32px rgba(var(--primary-rgb),0.42), 0 2px 8px rgba(var(--primary-rgb),0.18);
+    }
+
+    [data-theme="neutral"] {
+      --pink:        #C8B89A;
+      --pink-light:  #ECE3D2;
+      --pink-mid:    #D4C4A8;
+      --pink-dark:   #6B5D4F;
+      --pink-deep:   #3E342B;
+      --cream:       #FCFAF5;
+      --purple-lt:   #EFE8DD;
+      --purple:      #B8A88C;
+      --purple-dk:   #7A6750;
+      --text:        #1A1A1A;
+      --text-mid:    #5C5043;
+      --text-light:  #A39A88;
+      --inp-border:  #DCD0BC;
+      --primary-rgb:        184, 168, 140;
+      --primary-soft-rgb:   232, 223, 208;
+      --primary-faint-rgb:  245, 240, 230;
+      --secondary-soft-rgb: 239, 232, 221;
+      --bg-gradient: linear-gradient(150deg, #FAF7F1 0%, #F2EEE4 50%, #EAE4D5 100%);
+      --hdr-bg:      rgba(250, 247, 241, 0.88);
+      --gem-grad:    linear-gradient(135deg, #6B5D4F 0%, #3E342B 100%);
+      --shadow-pink: 0 4px 20px rgba(var(--primary-rgb),0.20), 0 1px 4px rgba(var(--primary-rgb),0.10);
+      --shadow-hover: 0 8px 32px rgba(var(--primary-rgb),0.28), 0 2px 8px rgba(var(--primary-rgb),0.14);
+    }
+
+    [data-theme="blue"] {
+      --pink:        #C8BCEA;
+      --pink-light:  #E8E2F8;
+      --pink-mid:    #BCAEE2;
+      --pink-dark:   #6F5FD9;
+      --pink-deep:   #3F33A8;
+      --cream:       #F8F5FF;
+      --purple-lt:   #E2DDF5;
+      --purple:      #9B8ED9;
+      --purple-dk:   #5949A8;
+      --text:        #1A1A1A;
+      --text-mid:    #4F4470;
+      --text-light:  #998FB8;
+      --inp-border:  #D5CDF0;
+      --primary-rgb:        168, 154, 232;
+      --primary-soft-rgb:   232, 226, 248;
+      --primary-faint-rgb:  245, 241, 252;
+      --secondary-soft-rgb: 226, 221, 245;
+      --bg-gradient: linear-gradient(150deg, #F8F5FF 0%, #EFE9FF 50%, #E5DFF8 100%);
+      --hdr-bg:      rgba(248, 245, 255, 0.88);
+      --gem-grad:    linear-gradient(135deg, #6F5FD9 0%, #3F33A8 100%);
+      --shadow-pink: 0 4px 20px rgba(var(--primary-rgb),0.22), 0 1px 4px rgba(var(--primary-rgb),0.10);
+      --shadow-hover: 0 8px 32px rgba(var(--primary-rgb),0.32), 0 2px 8px rgba(var(--primary-rgb),0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text);
+      font-size: 14px;
+      transition: background 0.32s ease, color 0.2s ease;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--pink-mid); border-radius: 999px; }
+
+    /* ── Cards ── */
+    .card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 24px;
+      border: 1.5px solid rgba(var(--primary-rgb),0.28);
+      box-shadow: var(--shadow-pink);
+      transition: box-shadow 0.2s ease;
+    }
+
+    /* ── Typography ── */
+    .sect { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); }
+
+    /* ══════ HEADER ══════ */
+    .hdr {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--hdr-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1.5px solid rgba(var(--primary-rgb),0.22);
+      height: 66px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+    }
+    .hdr-brand { display: flex; align-items: center; gap: 12px; }
+    .hdr-gem {
+      width: 40px; height: 40px; border-radius: 14px;
+      background: linear-gradient(135deg, #FFB7C5 0%, #E08AB0 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb),0.55);
+      flex-shrink: 0;
+    }
+    .hdr-title { font-size: 1.3rem; font-weight: 900; color: var(--text); letter-spacing: -0.025em; line-height: 1; }
+    .hdr-sub   { font-size: 10.5px; color: var(--text-light); font-weight: 700; margin-top: 2px; letter-spacing: 0.02em; }
+    .hdr-acts  { display: flex; gap: 8px; }
+
+    /* ── Icon buttons (header) ── */
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid rgba(var(--primary-rgb),0.38);
+      background: rgba(var(--primary-soft-rgb),0.45);
+      color: var(--pink-dark); cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .icon-btn:hover {
+      background: var(--pink-dark); border-color: var(--pink-dark); color: #fff;
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 5px 16px rgba(232,131,154,0.45);
+    }
+
+    /* ══════ WORKSPACE ══════ */
+    .ws {
+      display: grid;
+      grid-template-columns: 60fr 40fr;
+      gap: 18px;
+      padding: 22px 32px 70px;
+      max-width: 1380px;
+      margin: 0 auto;
+      align-items: start;
+    }
+    .left-col  { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+    .right-col {
+      position: sticky; top: 88px;
+      align-self: start;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+
+    /* ── Inputs ── */
+    .inp {
+      width: 100%; padding: 9px 12px; border-radius: 12px;
+      border: 1.5px solid var(--inp-border); font-size: 13px; color: var(--text);
+      background: rgba(var(--primary-faint-rgb),0.65); outline: none;
+      font-family: 'Nunito', sans-serif; font-weight: 600;
+      transition: all 0.18s ease;
+    }
+    .inp:focus { border-color: var(--pink-dark); background: #fff; box-shadow: 0 0 0 3px rgba(var(--primary-rgb),0.2); }
+    .inp::placeholder { color: var(--text-light); font-weight: 500; }
+    .inp.is-expr { font-family: 'SF Mono','Monaco',monospace; color: var(--purple-dk); font-size: 12px; }
+
+    /* ── Animations ── */
+    .row-enter { animation: rowIn 0.22s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes rowIn { from{opacity:0;transform:translateY(-7px) scale(0.97)} to{opacity:1;transform:none} }
+    @keyframes spin   { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes modalIn {
+      from { opacity:0; transform:translate(-50%,-48%) scale(0.93); }
+      to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    }
+
+    /* ── Add / delete ── */
+    .add-btn {
+      width: 100%; padding: 11px; border-radius: 14px;
+      border: 2px dashed rgba(var(--primary-rgb),0.55);
+      color: var(--pink-dark); font-size: 13px; font-weight: 800;
+      cursor: pointer; background: transparent; margin-top: 10px;
+      font-family: 'Nunito',sans-serif;
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .add-btn:hover { border-color: var(--pink-dark); background: rgba(var(--primary-soft-rgb),0.35); transform: translateY(-1px); }
+    .del-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #D4B0BC; cursor: pointer; background: transparent;
+      border: none; transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .del-btn:hover { background: var(--pink-light); color: var(--pink-deep); }
+
+    /* ── Weight badge ── */
+    .w-badge { font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; font-family:'Nunito',sans-serif; }
+
+    /* ── Mode toggle ── */
+    .mode-wrap {
+      display: flex; align-items: center;
+      background: rgba(var(--primary-soft-rgb),0.45); border-radius: 999px;
+      padding: 3px; gap: 2px;
+      border: 1.5px solid rgba(var(--primary-rgb),0.3);
+    }
+    .mode-btn {
+      padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 800;
+      cursor: pointer; border: none; background: transparent; color: var(--text-light);
+      transition: all 0.18s ease; white-space: nowrap; font-family:'Nunito',sans-serif;
+    }
+    .mode-btn.active { background: var(--pink-dark); color: #fff; box-shadow: 0 2px 8px rgba(232,131,154,0.38); }
+
+    /* ── Grade pills ── */
+    .gpill { display:inline-flex; align-items:center; padding:4px 11px; border-radius:999px; font-size:12px; font-weight:700; }
+
+    /* ── Stat boxes ── */
+    .sbox {
+      text-align:center; padding:15px 10px; border-radius:18px;
+      background: linear-gradient(135deg,rgba(var(--primary-faint-rgb),0.8),rgba(var(--secondary-soft-rgb),0.55));
+      border: 1.5px solid rgba(var(--primary-rgb),0.18);
+    }
+    .sval { font-size:1.75rem; font-weight:900; letter-spacing:-0.04em; line-height:1; color:var(--text); }
+    .slbl { font-size:10px; color:var(--text-light); margin-top:5px; font-weight:700; letter-spacing:0.04em; }
+
+    /* ── Target buttons ── */
+    .tgt-btn {
+      padding: 7px 15px; border-radius: 999px; font-size: 13px; font-weight: 900;
+      cursor: pointer; border: 2px solid transparent; user-select: none;
+      font-family:'Nunito',sans-serif;
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .tgt-btn:hover { transform: translateY(-3px) scale(1.07); }
+    .tgt-btn.active { border-color: rgba(74,37,64,0.18); box-shadow: 0 4px 14px rgba(0,0,0,0.12); transform: translateY(-2px) scale(1.11); }
+
+    /* ── Result box ── */
+    .rbox { border-radius: 18px; padding: 18px 20px; transition: all 0.3s ease; }
+
+    /* ── Buttons ── */
+    .btn-p {
+      padding: 9px 20px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, var(--pink-deep), var(--pink-dark));
+      color: #fff; font-size: 13px; font-weight: 800;
+      cursor: pointer; font-family:'Nunito',sans-serif;
+      box-shadow: 0 4px 14px rgba(200,90,120,0.38);
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-p:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 20px rgba(200,90,120,0.48); }
+    .btn-g {
+      padding: 9px 16px; border-radius: 12px;
+      border: 1.5px solid rgba(var(--primary-rgb),0.38);
+      background: #fff; color: var(--text-mid);
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family:'Nunito',sans-serif;
+      transition: all 0.15s ease;
+    }
+    .btn-g:hover { border-color: var(--pink-dark); color: var(--pink-dark); }
+
+    /* ── Archive items ── */
+    .arc-item {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 13px; border-radius:14px;
+      border:1.5px solid rgba(var(--primary-rgb),0.2); margin-bottom:7px;
+      cursor:pointer; transition:all 0.16s ease;
+      background:rgba(255,255,255,0.55);
+    }
+    .arc-item:hover { border-color:var(--pink); background:rgba(var(--primary-soft-rgb),0.28); transform:translateY(-1px); }
+    .arc-load-btn {
+      flex-shrink:0; padding:5px 13px; border-radius:9px; border:none;
+      background: linear-gradient(135deg,var(--pink-deep),var(--pink-dark));
+      color:#fff; font-size:12px; font-weight:800;
+      cursor:pointer; transition:all 0.15s ease; font-family:'Nunito',sans-serif;
+    }
+    .arc-load-btn:hover { opacity:.86; transform:translateY(-1px); }
+
+    /* ── AI drop zone ── */
+    .ai-zone {
+      border:2px dashed rgba(var(--primary-rgb),0.55);
+      border-radius:16px; padding:20px;
+      text-align:center; cursor:pointer;
+      background:linear-gradient(135deg,rgba(var(--primary-faint-rgb),0.65),rgba(var(--secondary-soft-rgb),0.4));
+      min-height:78px; display:flex; align-items:center; justify-content:center;
+      transition:all 0.2s ease;
+    }
+    .ai-zone:hover { border-color:var(--pink-dark); background:rgba(var(--primary-soft-rgb),0.42); }
+    .ai-zone.ai-dragover { border-color:var(--pink-deep); border-style:solid; background:rgba(var(--primary-soft-rgb),0.6); transform:scale(1.01); box-shadow:0 0 0 4px rgba(var(--primary-rgb),0.2); }
+    .ai-zone.ai-loading  { pointer-events:none; border-color:var(--purple); border-style:solid; }
+
+    /* ── Cumulative GPA accordion ── */
+    .sem-card {
+      border-radius:16px; border:1.5px solid rgba(var(--primary-rgb),0.22);
+      background:rgba(255,255,255,0.65);
+      margin-bottom:8px; overflow:hidden; transition:box-shadow 0.15s;
+    }
+    .sem-card:hover { box-shadow:0 2px 12px rgba(var(--primary-rgb),0.22); }
+    .sem-hd {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 15px; cursor:pointer; user-select:none;
+      transition:background 0.15s;
+    }
+    .sem-hd:hover { background:rgba(var(--primary-soft-rgb),0.18); }
+    .sem-icon {
+      width:34px; height:34px; border-radius:11px; flex-shrink:0;
+      background:linear-gradient(135deg,var(--pink-light),var(--purple-lt));
+      display:flex; align-items:center; justify-content:center;
+    }
+    .sem-name {
+      font-weight:800; font-size:14px; color:var(--text);
+      background:none; border:none; outline:none; padding:0;
+      border-bottom:2px solid transparent; cursor:pointer; min-width:60px;
+      font-family:'Nunito',sans-serif; transition:border-color 0.15s;
+    }
+    .sem-name:focus { border-bottom-color:var(--pink-dark); cursor:text; }
+    .sem-body {
+      border-top:1.5px solid rgba(var(--primary-rgb),0.14);
+      padding:4px 15px 13px;
+    }
+    .sem-sel {
+      width:100%; padding:8px 28px 8px 10px; border-radius:10px;
+      border:1.5px solid var(--inp-border); font-size:13px; color:var(--text);
+      background:rgba(var(--primary-faint-rgb),0.65) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23E8839A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+      appearance:none; -webkit-appearance:none; outline:none; cursor:pointer;
+      font-family:'Nunito',sans-serif; font-weight:600; transition:border-color 0.15s;
+    }
+    .sem-sel:focus { border-color:var(--pink-dark); }
+    .c-row {
+      display:grid; grid-template-columns:1fr 88px 78px 30px;
+      gap:7px; align-items:center; margin-bottom:7px;
+      padding-bottom:7px; border-bottom:1px solid rgba(var(--primary-rgb),0.1);
+    }
+    .c-row:last-of-type { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+
+    /* ── Modals ── */
+    .mbackdrop {
+      position:fixed; inset:0; background:rgba(74,37,64,0.24);
+      z-index:100; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+      animation:fadeIn 0.15s ease;
+    }
+    .modal {
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:101; width:440px; max-width:calc(100vw - 28px);
+      max-height:calc(100vh - 80px); overflow-y:auto;
+      background:var(--cream); border-radius:28px;
+      border:2px solid rgba(var(--primary-rgb),0.38);
+      box-shadow:0 20px 60px rgba(var(--primary-rgb),0.3),0 4px 16px rgba(74,37,64,0.1);
+      animation:modalIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .m-hd { padding:22px 24px 0; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .m-title { display:flex; align-items:center; gap:9px; font-size:1rem; font-weight:900; color:var(--text); }
+    .m-close {
+      width:30px; height:30px; border-radius:50%; border:none;
+      background:var(--pink-light); color:var(--pink-dark); cursor:pointer;
+      font-size:18px; display:flex; align-items:center; justify-content:center;
+      transition:all 0.15s; line-height:1; font-family:'Nunito',sans-serif;
+    }
+    .m-close:hover { background:var(--pink-dark); color:#fff; }
+    .m-inp {
+      padding:7px 11px; border-radius:10px;
+      border:1.5px solid var(--inp-border); font-size:13px; color:var(--text);
+      background:#fff; outline:none; width:90px; text-align:center;
+      font-family:'Nunito',sans-serif; font-weight:700; transition:border-color 0.15s;
+    }
+    .m-inp:focus { border-color:var(--pink-dark); }
+    .m-inp:disabled { opacity:.4; cursor:not-allowed; }
+    .m-foot { padding:14px 24px 20px; display:flex; gap:8px; justify-content:flex-end; border-top:1.5px solid rgba(var(--primary-rgb),0.2); margin-top:14px; }
+
+    /* ── Hello Kitty watermark ── */
+    .kitty-wm {
+      position:absolute; inset:0; pointer-events:none; overflow:hidden;
+      border-radius:24px; opacity:0.055; z-index:0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='49' rx='19' ry='18' fill='none' stroke='%23FFB7C5' stroke-width='1.8'/%3E%3Cellipse cx='27' cy='32' rx='7' ry='7' fill='none' stroke='%23FFB7C5' stroke-width='1.8'/%3E%3Cellipse cx='53' cy='32' rx='7' ry='7' fill='none' stroke='%23FFB7C5' stroke-width='1.8'/%3E%3Cpath d='M13,25 Q20,33 13,40' fill='none' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3Cpath d='M27,25 Q20,33 27,40' fill='none' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3Ccircle cx='20' cy='32' r='2' fill='%23FFB7C5'/%3E%3Ccircle cx='34' cy='47' r='2.3' fill='%23FFB7C5'/%3E%3Ccircle cx='46' cy='47' r='2.3' fill='%23FFB7C5'/%3E%3Ccircle cx='40' cy='53' r='2' fill='%23FFCCD8'/%3E%3Cline x1='15' y1='51' x2='32' y2='51' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3Cline x1='15' y1='57' x2='32' y2='56' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3Cline x1='48' y1='51' x2='65' y2='51' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3Cline x1='48' y1='56' x2='65' y2='57' stroke='%23FFB7C5' stroke-width='1.2'/%3E%3C/svg%3E");
+      background-repeat:repeat; background-size:80px 80px;
+    }
+
+    /* ── Tabs ── */
+    .tab-nav-wrap {
+      border-bottom: 1.5px solid rgba(var(--primary-rgb),0.22);
+      background: rgba(255,251,240,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .tab-nav {
+      max-width: 1380px; margin: 0 auto; padding: 0 32px;
+      display: flex; gap: 28px;
+    }
+    .tab-btn {
+      padding: 13px 4px; font-size: 13px; font-weight: 800;
+      background: none; border: none;
+      border-bottom: 2px solid transparent; margin-bottom: -1.5px;
+      color: var(--text-light); cursor: pointer;
+      font-family: 'Nunito', sans-serif; letter-spacing: 0.02em;
+      transition: all 0.18s ease;
+    }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--pink-deep); }
+    .tab-btn:hover:not(.active) { color: var(--text-mid); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: grid; }
+
+    /* ── Inline AI dropzone ── */
+    .ai-zone.ai-zone-inline {
+      min-height: auto; padding: 11px 14px; margin-bottom: 14px;
+      text-align: left;
+      display: flex; align-items: center; gap: 12px; justify-content: flex-start;
+    }
+    .ai-zone-inline .ai-zone-text {
+      flex: 1; line-height: 1.4; font-size: 12px;
+      color: var(--text-mid); font-weight: 600;
+    }
+    .ai-zone-inline .ai-zone-text strong {
+      color: var(--pink-dark); font-weight: 800;
+    }
+
+    /* ── Small icon button (inline) ── */
+    .icon-btn-sm {
+      width: 28px; height: 28px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid rgba(var(--primary-rgb),0.32);
+      background: rgba(var(--primary-soft-rgb),0.35);
+      color: var(--pink-dark); cursor: pointer;
+      transition: all 0.18s ease; flex-shrink: 0;
+    }
+    .icon-btn-sm:hover {
+      background: var(--pink-dark); border-color: var(--pink-dark); color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width:920px) {
+      .ws { grid-template-columns:1fr; }
+      .right-col { position:static; height:auto; max-height:none; }
+    }
+    @media (max-width:600px) {
+      .ws { padding:14px; } .hdr { padding:0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Backdrops ── -->
+<div id="bd-settings" class="mbackdrop" style="display:none;" onclick="closeSettingsModal()"></div>
+<!-- ══════ SETTINGS MODAL ══════ -->
+<div id="settings-modal" class="modal" style="display:none;">
+  <div class="m-hd">
+    <div class="m-title">
+      <span style="font-size:17px;">⚙️</span>
+      <span>评分标准设置</span>
+    </div>
+    <button class="m-close" onclick="closeSettingsModal()">×</button>
+  </div>
+  <p id="modal-subtitle" style="font-size:12px;color:var(--text-light);margin:0 24px 14px;font-weight:600;"></p>
+  <div id="modal-table" style="padding:0 24px;"></div>
+  <div class="m-foot">
+    <button class="btn-g" onclick="closeSettingsModal()">取消</button>
+    <button class="btn-p" onclick="saveGrades()">✦ 保存</button>
+  </div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-gem">
+      <!-- Bow SVG -->
+      <svg viewBox="0 0 26 18" width="22" height="15" fill="white">
+        <path d="M2 1 L11 9 L2 17 C-1 14 -1 4 2 1 Z"/>
+        <path d="M24 1 L15 9 L24 17 C27 14 27 4 24 1 Z"/>
+        <circle cx="13" cy="9" r="4"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hdr-title">Grade Calculator</div>
+      <div class="hdr-sub">加油！Every grade counts ♡</div>
+    </div>
+  </div>
+  <div class="hdr-acts"></div>
+</header>
+
+<!-- ── TAB NAV ── -->
+<div class="tab-nav-wrap">
+  <nav class="tab-nav">
+    <button id="tabbtn-predict" class="tab-btn active" onclick="switchTab('predict')">目标预测</button>
+    <button id="tabbtn-cumulative" class="tab-btn" onclick="switchTab('cumulative')">Cumulative GPA</button>
+  </nav>
+</div>
+
+<!-- ════ TAB 1: PREDICT ════ -->
+<div id="tab-predict" class="ws tab-pane active">
+  <!-- LEFT COLUMN -->
+  <div class="left-col">
+
+    <!-- Course Entry (with inline AI dropzone) -->
+    <div class="card" style="padding:22px 24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <p class="sect">课程组成</p>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div class="mode-wrap">
+            <button class="mode-btn active" id="btn-percent" onclick="setMode('percent')">百分比</button>
+            <button class="mode-btn"        id="btn-total"   onclick="setMode('total')">总分制</button>
+          </div>
+          <span id="weight-badge" class="w-badge" style="color:var(--text-light);background:rgba(var(--primary-rgb),0.15);">总权重 0%</span>
+        </div>
+      </div>
+
+      <!-- Inline AI dropzone -->
+      <div id="ai-drop-zone" class="ai-zone ai-zone-inline"
+           ondragover="event.preventDefault();this.classList.add('ai-dragover')"
+           ondragleave="this.classList.remove('ai-dragover')"
+           ondrop="handleAiDrop(event)"
+           onclick="document.getElementById('ai-file-input').click()">
+        <input id="ai-file-input" type="file" accept="image/*" style="display:none"
+               onclick="event.stopPropagation()" onchange="handleAiFileChange(this)" />
+        <div id="ai-drop-content" style="display:flex;align-items:center;gap:12px;flex:1;">
+          <span style="font-size:20px;line-height:1;">🖼️</span>
+          <div class="ai-zone-text">
+            <strong>拖入图片 / 点击上传</strong>，也可以直接粘贴截图（⌘V）
+            <span style="display:block;color:var(--text-light);font-size:11px;margin-top:1px;font-weight:600;">· 自动识别评分标准和课程组成</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 90px 90px 32px;gap:8px;padding:0 2px;margin-bottom:8px;">
+        <span style="font-size:10.5px;font-weight:700;color:var(--text-light);">名称</span>
+        <span id="col-w-label" style="font-size:10.5px;font-weight:700;color:var(--text-light);">权重</span>
+        <span style="font-size:10.5px;font-weight:700;color:var(--text-light);">得分</span>
+        <span></span>
+      </div>
+      <div id="rows-container"></div>
+      <button class="add-btn" onclick="addRow()">♡ 添加项目</button>
+    </div>
+
+    <!-- Archives -->
+    <div class="card" style="padding:20px 24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;">
+        <p class="sect">课程存档</p>
+        <span style="font-size:10px;color:var(--text-light);font-weight:700;">✦ 自动保存</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:13px;">
+        <input id="archive-name-input" class="inp" type="text"
+               placeholder="输入名称，如：统计学 2026春" style="flex:1;"
+               onkeydown="if(event.key==='Enter')saveNamedCourse()" />
+        <button onclick="saveNamedCourse()" class="btn-p" style="white-space:nowrap;padding:9px 15px;">保存存档</button>
+      </div>
+      <div id="archive-list"></div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- RIGHT COLUMN (sticky) -->
+  <div class="right-col">
+
+    <!-- Current Score (with watermark) -->
+    <div class="card" style="padding:22px 20px;position:relative;overflow:hidden;">
+      <div class="kitty-wm"></div>
+      <p class="sect" style="margin-bottom:13px;position:relative;">当前成绩</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;position:relative;">
+        <div class="sbox">
+          <div class="sval" id="display-score">—</div>
+          <div class="slbl" id="score-label">趋势得分</div>
+        </div>
+        <div class="sbox">
+          <div class="sval" id="display-grade">—</div>
+          <div class="slbl">当前等级</div>
+        </div>
+        <div class="sbox">
+          <div class="sval" id="display-graded-w">—</div>
+          <div class="slbl" id="graded-w-label">已评估权重</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grade Scale (with inline edit icon) -->
+    <div class="card" style="padding:18px 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
+        <p class="sect">评分标准</p>
+        <button class="icon-btn-sm" onclick="openSettingsModal()" title="编辑评分标准">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+      </div>
+      <div id="scale-pills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+
+    <!-- Target Prediction -->
+    <div class="card" style="padding:20px;">
+      <p class="sect" style="margin-bottom:11px;">目标预测</p>
+      <p style="font-size:12px;color:var(--text-mid);margin-bottom:10px;font-weight:700;">选择你的目标等级：</p>
+      <div id="target-btns" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"></div>
+      <div id="prediction" style="display:none;"></div>
+    </div>
+
+  </div><!-- /right-col -->
+</div><!-- /tab-predict -->
+
+<!-- ════ TAB 2: CUMULATIVE GPA ════ -->
+<div id="tab-cumulative" class="ws tab-pane">
+  <!-- LEFT COLUMN: Add Semester -->
+  <div class="left-col">
+    <div class="card" style="padding:22px 24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+        <p class="sect">Add Semester</p>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button onclick="cgpaAddSemester()" class="btn-p" style="padding:7px 13px;font-size:12px;">＋ Add Semester</button>
+          <button onclick="cgpaReset()"
+            style="padding:6px 10px;border-radius:8px;border:1px solid rgba(var(--primary-rgb),0.28);background:transparent;color:var(--text-light);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:'Nunito',sans-serif;"
+            onmouseover="this.style.borderColor='#fca5a5';this.style.color='#ef4444'"
+            onmouseout="this.style.borderColor='rgba(var(--primary-rgb),0.28)';this.style.color='var(--text-light)'">Reset</button>
+        </div>
+      </div>
+      <div id="cgpa-semesters"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Cumulative GPA Summary -->
+  <div class="right-col">
+    <div class="card" style="padding:22px 20px;position:relative;overflow:hidden;">
+      <div class="kitty-wm"></div>
+      <p class="sect" style="text-align:center;margin-bottom:16px;position:relative;">Cumulative GPA</p>
+      <div style="text-align:center;margin-bottom:18px;position:relative;">
+        <div id="cgpa-display" style="font-size:3.8rem;font-weight:900;letter-spacing:-0.05em;line-height:1;color:var(--text-light);transition:color 0.3s;">—</div>
+        <div style="font-size:12px;color:var(--text-light);margin-top:6px;font-weight:700;">out of 4.0</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative;">
+        <div class="sbox"><div class="sval" id="cgpa-credits"  style="font-size:1.35rem;">0</div><div class="slbl">Credits</div></div>
+        <div class="sbox"><div class="sval" id="cgpa-classes"  style="font-size:1.35rem;">0</div><div class="slbl">Classes</div></div>
+        <div class="sbox"><div class="sval" id="cgpa-sems"     style="font-size:1.35rem;">0</div><div class="slbl">Semesters</div></div>
+        <div class="sbox"><div class="sval" id="cgpa-latest"   style="font-size:1.35rem;">—</div><div class="slbl">Latest</div></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-cumulative -->
+
+<script>
+// ── Grade colors (Sanrio palette) ──
+const GRADE_COLORS = {
+  'A':  { bg:'#DCFCE7', color:'#15803d' },
+  'A-': { bg:'#DCFCE7', color:'#16a34a' },
+  'B+': { bg:'#EDE9FE', color:'#6d28d9' },
+  'B':  { bg:'#EDE9FE', color:'#7c3aed' },
+  'B-': { bg:'#EDE9FE', color:'#8b5cf6' },
+  'C+': { bg:'#FEF9C3', color:'#854d0e' },
+  'C':  { bg:'#FEF9C3', color:'#713f12' },
+  'D':  { bg:'#FFE4EC', color:'#be185d' },
+  'F':  { bg:'#FFD6DC', color:'#9f1239' },
+};
+
+let gradeMode = 'percent';
+
+let percentGrades = [
+  {g:'A',min:93},{g:'A-',min:90},{g:'B+',min:87},{g:'B',min:83},
+  {g:'B-',min:80},{g:'C+',min:75},{g:'C',min:65},{g:'D',min:50},{g:'F',min:0},
+];
+let totalGrades = [
+  {g:'A',min:93},{g:'A-',min:90},{g:'B+',min:87},{g:'B',min:83},
+  {g:'B-',min:80},{g:'C+',min:75},{g:'C',min:65},{g:'D',min:50},{g:'F',min:0},
+];
+
+let rows = [], counter = 0, selectedGrade = null;
+
+// ── Expr evaluator ──
+function evalExpr(str) {
+  if (str===''||str==null||str===undefined) return NaN;
+  str = String(str).trim();
+  if (!str) return NaN;
+  if (!/^[\d\s\+\-\*\/\.\(\)]+$/.test(str)) return NaN;
+  try { const r=Function('"use strict";return('+str+')')(); return (typeof r==='number'&&isFinite(r))?r:NaN; }
+  catch(e){return NaN;}
+}
+
+function currentGrades() { return gradeMode==='percent'?percentGrades:totalGrades; }
+function getGrade(score)  { const gs=currentGrades(); return gs.find(g=>score>=g.min)??gs[gs.length-1]; }
+function gc(g) { return GRADE_COLORS[g.g]||{bg:'#f1f5f9',color:'#64748b'}; }
+
+// ── Grade pills ──
+function renderScalePills() {
+  const c = document.getElementById('scale-pills');
+  c.innerHTML = '';
+  const unit = gradeMode==='percent'?'%':' 分';
+  currentGrades().forEach(g => {
+    const col = gc(g);
+    const el  = document.createElement('span');
+    el.className = 'gpill';
+    el.style.cssText = `background:${col.bg};color:${col.color};`;
+    el.textContent = `${g.g} ≥ ${g.min}${unit}`;
+    c.appendChild(el);
+  });
+}
+
+// ── Target buttons ──
+function renderTargetBtns() {
+  const c = document.getElementById('target-btns');
+  c.innerHTML = '';
+  currentGrades().slice(0,8).forEach(g => {
+    const col = gc(g);
+    const btn = document.createElement('button');
+    btn.className = 'tgt-btn'+(selectedGrade===g.g?' active':'');
+    btn.style.cssText = `background:${col.bg};color:${col.color};`;
+    btn.textContent = g.g;
+    btn.onclick = () => {
+      selectedGrade = g.g;
+      document.querySelectorAll('.tgt-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      calculate();
+    };
+    c.appendChild(btn);
+  });
+}
+
+// ── Mode toggle ──
+function setMode(mode) {
+  gradeMode = mode;
+  document.getElementById('btn-percent').classList.toggle('active', mode==='percent');
+  document.getElementById('btn-total').classList.toggle('active',   mode==='total');
+  document.getElementById('col-w-label').textContent     = mode==='percent'?'权重':'满分';
+  document.getElementById('score-label').textContent     = mode==='percent'?'趋势得分':'趋势总分';
+  document.getElementById('graded-w-label').textContent  = mode==='percent'?'已评估权重':'已评估满分';
+  selectedGrade = null;
+  renderScalePills(); renderTargetBtns(); renderRows();
+}
+
+// ── Rows ──
+function addRow(name='',weight='',score='') { rows.push({id:++counter,name,weight,score}); renderRows(); }
+function removeRow(id) { rows=rows.filter(r=>r.id!==id); renderRows(); }
+function updateField(id,field,val) { const r=rows.find(r=>r.id===id); if(r){r[field]=val;calculate();} }
+
+function onInputExpr(id,field,el) { el.classList.toggle('is-expr',/[\+\-\*\/\(\)]/.test(el.value)); updateField(id,field,el.value); }
+function onBlurExpr(id,field,el) {
+  const raw=el.value.trim();
+  if(!raw||/^-?\d+\.?\d*$/.test(raw)||/^-?\d*\.\d+$/.test(raw)) return;
+  const result=evalExpr(raw);
+  if(!isNaN(result)){const fmt=parseFloat(result.toFixed(6)).toString();el.value=fmt;el.classList.remove('is-expr');updateField(id,field,fmt);}
+}
+
+function esc(s) { if(s===''||s==null)return''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+
+function renderRows() {
+  const c=document.getElementById('rows-container'); c.innerHTML='';
+  const isTotal=gradeMode==='total';
+  rows.forEach(r=>{
+    const d=document.createElement('div');
+    d.className='row-enter';
+    d.style.cssText='display:grid;grid-template-columns:1fr 90px 90px 32px;gap:8px;align-items:center;margin-bottom:8px;';
+    const exprW=/[\+\-\*\/\(\)]/.test(r.weight), exprS=/[\+\-\*\/\(\)]/.test(r.score);
+    d.innerHTML=`
+      <input class="inp" type="text" placeholder="例：期末考试"
+        value="${esc(r.name)}" oninput="updateField(${r.id},'name',this.value)" />
+      <div style="position:relative;">
+        <input class="inp${exprW?' is-expr':''}" type="text" placeholder="${isTotal?'100':'30'}"
+          value="${esc(r.weight)}"
+          oninput="onInputExpr(${r.id},'weight',this)"
+          onblur="onBlurExpr(${r.id},'weight',this)"
+          style="${isTotal?'':'padding-right:22px;'}" />
+        ${isTotal?'':'<span style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-light);pointer-events:none;">%</span>'}
+      </div>
+      <input class="inp${exprS?' is-expr':''}" type="text" placeholder="待出分"
+        value="${esc(r.score)}"
+        oninput="onInputExpr(${r.id},'score',this)"
+        onblur="onBlurExpr(${r.id},'score',this)" />
+      <button class="del-btn" onclick="removeRow(${r.id})" title="删除">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+          <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+        </svg>
+      </button>`;
+    c.appendChild(d);
+  });
+  calculate();
+}
+
+// ── Calculation ──
+function calculate() { gradeMode==='percent'?calcPercent():calcTotal(); autoSave(); }
+
+function calcPercent() {
+  let totalW=0,gradedW=0,weightedSum=0;
+  rows.forEach(r=>{
+    const w=evalExpr(r.weight)||0;
+    const s=(r.score!==''&&r.score!=null)?evalExpr(r.score):NaN;
+    totalW+=w;
+    if(!isNaN(s)){weightedSum+=s*w/100;gradedW+=w;}
+  });
+  const ungradedW=totalW-gradedW;
+  const badge=document.getElementById('weight-badge');
+  badge.textContent=`总权重 ${+totalW.toFixed(1)}%`;
+  if(Math.abs(totalW-100)<0.01)
+    badge.style.cssText='color:#15803d;background:#dcfce7;font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;font-family:Nunito,sans-serif;';
+  else if(totalW>100)
+    badge.style.cssText='color:#be185d;background:#ffe4ec;font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;font-family:Nunito,sans-serif;';
+  else
+    badge.style.cssText='color:var(--text-light);background:rgba(var(--primary-rgb),0.15);font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;font-family:Nunito,sans-serif;';
+  if(gradedW>0){const p=weightedSum/gradedW*100;const gi=getGrade(p);const col=gc(gi);setStats(p.toFixed(1),gi.g,`${+gradedW.toFixed(1)}%`,col.color,'var(--text)');}
+  else resetStats();
+  selectedGrade?predictPercent(weightedSum,gradedW,ungradedW,totalW):hidePrediction();
+}
+
+function calcTotal() {
+  let totalMax=0,gradedMax=0,scoreSum=0;
+  rows.forEach(r=>{
+    const max=evalExpr(r.weight)||0;
+    const s=(r.score!==''&&r.score!=null)?evalExpr(r.score):NaN;
+    totalMax+=max;
+    if(!isNaN(s)){scoreSum+=s;gradedMax+=max;}
+  });
+  const badge=document.getElementById('weight-badge');
+  badge.textContent=`总分 ${+totalMax.toFixed(0)} 分`;
+  badge.style.cssText='color:var(--text-light);background:rgba(var(--primary-rgb),0.15);font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;font-family:Nunito,sans-serif;';
+  if(gradedMax>0){const p=scoreSum/gradedMax*totalMax;const gi=getGrade(p);const col=gc(gi);setStats(p.toFixed(1),gi.g,`${+gradedMax.toFixed(0)} 分`,col.color,'var(--text)');}
+  else resetStats();
+  selectedGrade?predictTotal(scoreSum,gradedMax,totalMax):hidePrediction();
+}
+
+function setStats(score,grade,gradedW,scoreColor,wColor) {
+  const s=document.getElementById('display-score');
+  const g=document.getElementById('display-grade');
+  const w=document.getElementById('display-graded-w');
+  s.textContent=score;s.style.color=scoreColor;
+  g.textContent=grade;g.style.color=scoreColor;
+  w.textContent=gradedW;w.style.color=wColor;
+}
+function resetStats() {
+  ['display-score','display-grade','display-graded-w'].forEach(id=>{
+    const el=document.getElementById(id);el.textContent='—';el.style.color='var(--text-light)';
+  });
+  hidePrediction();
+}
+function hidePrediction() { document.getElementById('prediction').style.display='none'; }
+
+// ── Predictions ──
+function predictPercent(weightedSum,gradedW,ungradedW,totalW) {
+  const el=document.getElementById('prediction');
+  const gi=currentGrades().find(g=>g.g===selectedGrade); if(!gi)return;
+  const T=gi.min; el.style.display='block';
+  if(totalW===0){el.innerHTML=htmlInfo('请先添加课程组成项目并填写权重。');return;}
+  const ungradedCount=rows.filter(r=>isNaN(evalExpr(r.score))&&(evalExpr(r.weight)||0)>0).length;
+  if(ungradedW<=0.001){
+    const final=weightedSum/totalW*100;
+    el.innerHTML=final>=T?htmlSuccess('🎉 目标达成！',`最终得分 <strong>${final.toFixed(1)}%</strong>，已达到 <strong>${selectedGrade}</strong>（需 ≥ ${T}%）。`)
+      :htmlImpossible(`所有项目均已出分，最终得分 <strong>${final.toFixed(1)}%</strong>，未达到 <strong>${gi.g}</strong>（需 ≥ ${T}%）。`);
+    return;
+  }
+  const needed=(T*totalW/100-weightedSum)*100/ungradedW;
+  if(needed<=0){el.innerHTML=htmlSuccess('✨ 稳了！',`即使剩余 ${ungradedCount} 个项目得 0 分，也能达到 <strong>${selectedGrade}</strong>。`);}
+  else if(needed>100){el.innerHTML=htmlImpossible(`即使剩余 ${ungradedCount} 项全部满分，均分仍需 ${needed.toFixed(1)} 才能达到 <strong>${gi.g}</strong>（需 ≥ ${T}%）。`);}
+  else {
+    const urg=needed>=92?'#C85A78':needed>=80?'#d97706':needed>=60?'#7c3aed':'#15803d';
+    el.innerHTML=`<div class="rbox" style="background:rgba(var(--primary-soft-rgb),0.3);border:1.5px solid rgba(var(--primary-rgb),0.5);">
+      <p style="color:var(--pink-deep);font-size:13px;font-weight:700;margin:0 0 12px 0;">为了达到 <strong>${selectedGrade}</strong>，剩余 ${ungradedCount} 个未出分项目平均需要：</p>
+      <div style="font-size:3.6rem;font-weight:900;letter-spacing:-0.05em;color:${urg};line-height:1;margin-bottom:14px;">
+        ${needed.toFixed(1)}<span style="font-size:1.3rem;font-weight:600;color:var(--pink-mid);margin-left:4px;">分</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">目标 ≥ ${T}%</span>
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">剩余权重 ${+ungradedW.toFixed(1)}%</span>
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">已得加权分 ${weightedSum.toFixed(2)}</span>
+      </div></div>`;
+  }
+}
+
+function predictTotal(scoreSum,gradedMax,totalMax) {
+  const el=document.getElementById('prediction');
+  const gi=currentGrades().find(g=>g.g===selectedGrade); if(!gi)return;
+  const T=gi.min; el.style.display='block';
+  if(totalMax===0){el.innerHTML=htmlInfo('请先添加课程组成项目并填写满分。');return;}
+  const ungradedMax=totalMax-gradedMax;
+  const ungradedCount=rows.filter(r=>isNaN(evalExpr(r.score))&&(evalExpr(r.weight)||0)>0).length;
+  if(ungradedMax<=0.001){
+    const pct=totalMax>0?(scoreSum/totalMax*100).toFixed(1):'0';
+    el.innerHTML=scoreSum>=T?htmlSuccess('🎉 目标达成！',`最终得分 <strong>${scoreSum.toFixed(1)} 分</strong>（${pct}%），已达到 <strong>${selectedGrade}</strong>（需 ≥ ${T} 分）。`)
+      :htmlImpossible(`所有项目均已出分，最终得分 <strong>${scoreSum.toFixed(1)} 分</strong>（${pct}%），未达到 <strong>${gi.g}</strong>（需 ≥ ${T} 分）。`);
+    return;
+  }
+  const needed=T-scoreSum;
+  if(needed<=0){el.innerHTML=htmlSuccess('✨ 稳了！',`即使剩余 ${ungradedCount} 个项目得 0 分，也能达到 <strong>${selectedGrade}</strong>（已得 ${scoreSum.toFixed(1)} 分 ≥ ${T} 分）。`);}
+  else if(needed>ungradedMax){el.innerHTML=htmlImpossible(`即使剩余 ${ungradedCount} 项全部满分（${ungradedMax} 分），仍差 <strong>${(needed-ungradedMax).toFixed(1)} 分</strong>才能达到 <strong>${gi.g}</strong>（需 ≥ ${T} 分）。`);}
+  else {
+    const pct=(needed/ungradedMax*100);
+    const urg=pct>=92?'#C85A78':pct>=80?'#d97706':pct>=60?'#7c3aed':'#15803d';
+    el.innerHTML=`<div class="rbox" style="background:rgba(var(--primary-soft-rgb),0.3);border:1.5px solid rgba(var(--primary-rgb),0.5);">
+      <p style="color:var(--pink-deep);font-size:13px;font-weight:700;margin:0 0 12px 0;">为了达到 <strong>${selectedGrade}</strong>，剩余 ${ungradedCount} 个未出分项目（满分 ${ungradedMax} 分）需要：</p>
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="font-size:3.6rem;font-weight:900;letter-spacing:-0.05em;color:${urg};line-height:1;">${needed.toFixed(1)}<span style="font-size:1.3rem;font-weight:600;color:var(--pink-mid);margin-left:4px;">分</span></div>
+        <div style="font-size:1.4rem;font-weight:800;color:${urg};opacity:0.72;">即 ${pct.toFixed(1)}%</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">目标 ≥ ${T} 分</span>
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">剩余满分 ${ungradedMax.toFixed(0)} 分</span>
+        <span style="font-size:12px;color:var(--pink-deep);background:rgba(var(--primary-rgb),0.2);padding:4px 11px;border-radius:999px;font-weight:700;">已得 ${scoreSum.toFixed(1)} 分</span>
+      </div></div>`;
+  }
+}
+
+function htmlSuccess(title,body) {
+  return `<div class="rbox" style="background:#f0fdf4;border:1.5px solid #bbf7d0;">
+    <p style="font-size:1rem;font-weight:800;color:#15803d;margin:0 0 7px 0;">${title}</p>
+    <p style="font-size:13px;color:#16a34a;margin:0;font-weight:600;">${body}</p></div>`;
+}
+function htmlImpossible(detail) {
+  return `<div class="rbox" style="background:#fff7f7;border:1.5px solid #fecaca;">
+    <p style="font-size:1.1rem;font-weight:900;color:#C85A78;margin:0 0 7px 0;letter-spacing:-0.02em;">Mission Impossible! 🙀</p>
+    <p style="font-size:13px;color:#f87171;margin:0 0 8px 0;font-weight:600;">${detail}</p>
+    <p style="font-size:12px;color:#fca5a5;margin:0;font-weight:600;">尽力就好呀~ ♡ 你已经很棒了！</p></div>`;
+}
+function htmlInfo(msg) { return `<p style="font-size:13px;color:var(--text-light);font-weight:600;">${msg}</p>`; }
+
+// ══════ SETTINGS MODAL ══════
+function openSettingsModal() {
+  const isPercent=gradeMode==='percent';
+  const grades=currentGrades();
+  document.getElementById('modal-subtitle').textContent=isPercent
+    ?'设置每个等级的最低百分比要求（高→低，F 固定为 0）'
+    :'设置每个等级的最低分数要求（高→低，F 固定为 0）';
+  document.getElementById('modal-table').innerHTML=`
+    <div style="display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;margin-bottom:10px;padding:0 2px;">
+      <span style="font-size:10px;font-weight:800;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;">等级</span>
+      <span style="font-size:10px;font-weight:800;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;">${isPercent?'最低 %':'最低分'}</span>
+    </div>
+    ${grades.map((g,i)=>{
+      const col=gc(g); const isF=i===grades.length-1;
+      return `<div style="display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;margin-bottom:9px;">
+        <span class="gpill" style="background:${col.bg};color:${col.color};justify-content:center;">${g.g}</span>
+        <input class="m-inp" type="number" id="mg-${i}" value="${g.min}"
+          min="0" max="${isPercent?100:999999}" step="${isPercent?'0.5':'1'}" ${isF?'disabled':''} />
+      </div>`;
+    }).join('')}`;
+  document.getElementById('bd-settings').style.display='block';
+  document.getElementById('settings-modal').style.display='block';
+}
+function closeSettingsModal() {
+  document.getElementById('bd-settings').style.display='none';
+  document.getElementById('settings-modal').style.display='none';
+}
+function saveGrades() {
+  const grades=currentGrades(); const newMins=[];
+  for(let i=0;i<grades.length-1;i++){
+    const v=parseFloat(document.getElementById(`mg-${i}`).value);
+    if(isNaN(v)||v<0){alert('请输入有效数值！');return;}
+    newMins.push(v);
+  }
+  newMins.push(0);
+  for(let i=0;i<newMins.length-2;i++){
+    if(newMins[i]<=newMins[i+1]){alert(`${grades[i].g} 的阈值必须大于 ${grades[i+1].g} 的阈值！`);return;}
+  }
+  grades.forEach((g,i)=>{g.min=newMins[i];});
+  closeSettingsModal(); renderScalePills(); renderTargetBtns(); calculate();
+}
+
+// ══════ TAB SWITCHING ══════
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const pane=document.getElementById('tab-'+name);
+  const btn=document.getElementById('tabbtn-'+name);
+  if(pane)pane.classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeSettingsModal();}
+});
+
+// ══════ STATE PERSISTENCE ══════
+function getState() {
+  return { rows:rows.map(r=>({...r})), gradeMode,
+    percentGrades:percentGrades.map(g=>({...g})),
+    totalGrades:totalGrades.map(g=>({...g})) };
+}
+function applyState(state) {
+  gradeMode=state.gradeMode||'percent';
+  if(state.percentGrades)percentGrades=state.percentGrades;
+  if(state.totalGrades)totalGrades=state.totalGrades;
+  rows=(state.rows||[]).map(r=>({...r}));
+  counter=rows.reduce((m,r)=>Math.max(m,r.id||0),0);
+  selectedGrade=null;
+  document.getElementById('btn-percent').classList.toggle('active',gradeMode==='percent');
+  document.getElementById('btn-total').classList.toggle('active',gradeMode==='total');
+  document.getElementById('col-w-label').textContent     = gradeMode==='percent'?'权重':'满分';
+  document.getElementById('score-label').textContent     = gradeMode==='percent'?'趋势得分':'趋势总分';
+  document.getElementById('graded-w-label').textContent  = gradeMode==='percent'?'已评估权重':'已评估满分';
+  renderScalePills(); renderTargetBtns(); renderRows();
+}
+function autoSave() {
+  try{localStorage.setItem('gpa_autosave_p',JSON.stringify(getState()));}catch(e){}
+}
+
+// ══════ ARCHIVES ══════
+function getSaves() { try{return JSON.parse(localStorage.getItem('gpa_saves_p')||'[]');}catch(e){return[];} }
+function putSaves(s){ try{localStorage.setItem('gpa_saves_p',JSON.stringify(s));}catch(e){} }
+
+function saveNamedCourse() {
+  const nameEl=document.getElementById('archive-name-input');
+  const name=nameEl.value.trim();
+  if(!name){nameEl.focus();nameEl.style.borderColor='#fca5a5';setTimeout(()=>nameEl.style.borderColor='',1000);return;}
+  const saves=getSaves();
+  const idx=saves.findIndex(s=>s.name===name);
+  if(idx>=0){const u={...saves[idx],savedAt:new Date().toISOString(),state:getState()};saves.splice(idx,1);saves.unshift(u);}
+  else saves.unshift({id:Date.now(),name,savedAt:new Date().toISOString(),state:getState()});
+  putSaves(saves); nameEl.value=''; renderArchives();
+}
+function loadNamedCourse(id) {
+  const entry=getSaves().find(s=>s.id===id); if(!entry)return;
+  applyState(entry.state);
+  const nameEl=document.getElementById('archive-name-input');
+  if(nameEl)nameEl.value=entry.name;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteNamedCourse(id) {
+  if(!confirm('确定要删除这个存档吗？'))return;
+  putSaves(getSaves().filter(s=>s.id!==id)); renderArchives();
+}
+function renderArchives() {
+  const saves=getSaves();
+  const container=document.getElementById('archive-list'); if(!container)return;
+  if(saves.length===0){
+    container.innerHTML='<p style="font-size:12px;color:var(--text-light);text-align:center;padding:14px 0;font-weight:600;">暂无存档 — 输入名称后点击「保存存档」</p>';
+    return;
+  }
+  const SVG_DEL=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/></svg>`;
+  container.innerHTML=saves.map(s=>{
+    const d=new Date(s.savedAt);
+    const pad=n=>String(n).padStart(2,'0');
+    const dateStr=`${d.getMonth()+1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const rowCount=s.state?.rows?.length||0;
+    const mode=s.state?.gradeMode==='total'?'总分制':'百分比';
+    return `<div class="arc-item" onclick="loadNamedCourse(${s.id})">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(s.name)}</div>
+        <div style="font-size:10.5px;color:var(--text-light);margin-top:2px;font-weight:600;">${dateStr} · ${rowCount} 项 · ${mode}</div>
+      </div>
+      <button class="arc-load-btn" onclick="event.stopPropagation();loadNamedCourse(${s.id})">载入</button>
+      <button class="del-btn" onclick="event.stopPropagation();deleteNamedCourse(${s.id})">${SVG_DEL}</button>
+    </div>`;
+  }).join('');
+}
+
+// ══════ AI RECOGNITION ══════
+function handleAiDrop(e) {
+  e.preventDefault();
+  document.getElementById('ai-drop-zone').classList.remove('ai-dragover');
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/'))processAiImage(file);
+}
+function handleAiFileChange(input) {
+  const file=input.files[0];
+  if(file){processAiImage(file);input.value='';}
+}
+document.addEventListener('paste',e=>{
+  const items=e.clipboardData?.items; if(!items)return;
+  for(const item of items){
+    if(item.type.startsWith('image/')){
+      if(!document.getElementById('tab-predict').classList.contains('active'))switchTab('predict');
+      const zone=document.getElementById('ai-drop-zone');
+      if(zone)zone.scrollIntoView({behavior:'smooth',block:'center'});
+      processAiImage(item.getAsFile());
+      break;
+    }
+  }
+});
+async function processAiImage(file) {
+  const apiKey=(localStorage.getItem('claude_api_key')||'').trim();
+  const content=document.getElementById('ai-drop-content');
+  const zone=document.getElementById('ai-drop-zone');
+  if(!apiKey){
+    zone.classList.remove('ai-loading');
+    content.innerHTML=`<span style="font-size:20px;line-height:1;">⚠️</span>
+      <div class="ai-zone-text">
+        <strong style="color:#C85A78;">未配置 API Key</strong>
+        <span style="display:block;color:var(--text-light);font-size:11px;margin-top:1px;font-weight:600;">请联系管理员配置 Claude API Key</span>
+      </div>`;
+    setTimeout(resetAiDropZone,3500);
+    return;
+  }
+  zone.classList.add('ai-loading');
+  content.innerHTML=`<div style="width:22px;height:22px;border:3px solid rgba(var(--primary-rgb),0.3);border-top-color:var(--pink-dark);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;"></div>
+    <div class="ai-zone-text"><strong style="color:var(--pink-dark);">AI 识别中…</strong></div>`;
+  try {
+    const base64=await new Promise((res,rej)=>{
+      const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);
+    });
+    const resp=await fetch('/api/claude',{
+      method:'POST',
+      headers:{
+        'content-type':'application/json','x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-opus-4-5',max_tokens:1024,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:base64}},
+          {type:'text',text:`Analyze this course syllabus or grading rubric image. Extract grading info and respond ONLY with valid JSON (no markdown):
+{"gradeMode":"percent","gradeScale":[{"g":"A","min":93},{"g":"A-","min":90},{"g":"B+","min":87},{"g":"B","min":83},{"g":"B-","min":80},{"g":"C+","min":75},{"g":"C","min":65},{"g":"D","min":50},{"g":"F","min":0}],"courses":[{"name":"Homework","weight":20},{"name":"Midterm","weight":30},{"name":"Final","weight":50}]}
+Rules: gradeMode="percent" if weights sum~100%, "total" if absolute points. gradeScale sorted desc. courses: all graded components. Respond with ONLY the JSON.`}
+        ]}]
+      })
+    });
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${resp.status}`);}
+    const data=await resp.json();
+    let text=data.content[0].text.trim().replace(/^```(?:json)?\n?/,'').replace(/\n?```$/,'');
+    applyAiResult(JSON.parse(text));
+    zone.classList.remove('ai-loading');
+    content.innerHTML=`<div style="font-size:24px;margin-bottom:7px;">✅</div><div style="font-size:13px;font-weight:800;color:#15803d;">识别成功！已自动填入</div>`;
+    setTimeout(resetAiDropZone,2500);
+  } catch(err) {
+    zone.classList.remove('ai-loading');
+    content.innerHTML=`<div style="font-size:24px;margin-bottom:7px;">❌</div>
+      <div style="font-size:13px;font-weight:800;color:#C85A78;">识别失败</div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;">${esc(String(err.message).slice(0,60))}</div>`;
+    setTimeout(resetAiDropZone,4000);
+  }
+}
+function resetAiDropZone() {
+  const content=document.getElementById('ai-drop-content');
+  const zone=document.getElementById('ai-drop-zone'); if(!content||!zone)return;
+  zone.classList.remove('ai-loading');
+  content.innerHTML=`<div style="font-size:26px;margin-bottom:7px;line-height:1;">🖼️</div>
+    <div style="font-size:13px;font-weight:800;color:var(--pink-dark);">Drag & drop a screenshot of the grading scale </div>
+    <div style="font-size:11px;color:var(--text-light);margin-top:3px;">支持 JPG、PNG、WEBP · 也可直接粘贴截图 ⌘V</div>`;
+}
+function applyAiResult(data) {
+  if(data.gradeMode==='percent'||data.gradeMode==='total'){
+    gradeMode=data.gradeMode;
+    document.getElementById('btn-percent').classList.toggle('active',gradeMode==='percent');
+    document.getElementById('btn-total').classList.toggle('active',gradeMode==='total');
+    document.getElementById('col-w-label').textContent    = gradeMode==='percent'?'权重':'满分';
+    document.getElementById('score-label').textContent    = gradeMode==='percent'?'趋势得分':'趋势总分';
+    document.getElementById('graded-w-label').textContent = gradeMode==='percent'?'已评估权重':'已评估满分';
+  }
+  if(Array.isArray(data.gradeScale)&&data.gradeScale.length>0){
+    const gs=gradeMode==='total'?totalGrades:percentGrades;
+    const map={};data.gradeScale.forEach(item=>{if(item.g&&item.min!=null)map[item.g]=+item.min;});
+    gs.forEach(g=>{if(map[g.g]!=null)g.min=map[g.g];});
+    renderScalePills(); renderTargetBtns();
+  }
+  if(Array.isArray(data.courses)&&data.courses.length>0){
+    rows=[];counter=0;selectedGrade=null;
+    data.courses.forEach(c=>rows.push({id:++counter,name:c.name||'',weight:String(c.weight??''),score:''}));
+    renderRows();
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════ CUMULATIVE GPA ══════
+const GRADE_POINTS = {
+  'A+':4.0,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,
+  'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1.0,'D-':0.7,'F':0.0
+};
+const GRADE_OPTS  = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'];
+const CREDIT_OPTS = [1,2,3,4,5,6];
+
+let semesters=[], semCounter=0, courseCounter=0;
+
+function cgpaSave() { try{localStorage.setItem('gpa_cumulative_p',JSON.stringify({semesters,semCounter,courseCounter}));}catch(e){} }
+function cgpaLoad() {
+  try{const d=JSON.parse(localStorage.getItem('gpa_cumulative_p')||'null');
+    if(d){semesters=d.semesters||[];semCounter=d.semCounter||0;courseCounter=d.courseCounter||0;}}catch(e){}
+}
+function calcSemGPA(sem) {
+  let pts=0,creds=0;
+  sem.courses.forEach(c=>{const p=GRADE_POINTS[c.grade];const cr=+c.credits||0;if(p!==undefined&&cr>0){pts+=p*cr;creds+=cr;}});
+  return{gpa:creds>0?pts/creds:null,credits:creds,classes:sem.courses.length};
+}
+function calcCumulative() {
+  let pts=0,creds=0,classes=0;
+  semesters.forEach(s=>s.courses.forEach(c=>{const p=GRADE_POINTS[c.grade];const cr=+c.credits||0;if(p!==undefined&&cr>0){pts+=p*cr;creds+=cr;classes++;}}));
+  const last=semesters.length>0?calcSemGPA(semesters[semesters.length-1]):null;
+  return{gpa:creds>0?pts/creds:null,credits:creds,classes,latest:last?.gpa??null};
+}
+function gpaCol(gpa) {
+  if(gpa===null) return 'var(--text-light)';
+  if(gpa>=3.7)   return '#15803d';
+  if(gpa>=3.0)   return '#7c3aed';
+  if(gpa>=2.0)   return '#d97706';
+  return '#C85A78';
+}
+function cgpaAddSemester() {
+  semesters.push({id:++semCounter,name:`Semester ${semCounter}`,expanded:false,
+    courses:[{id:++courseCounter,name:'',grade:'A',credits:3}]});
+  cgpaRender();
+}
+function cgpaDeleteSem(id) {
+  if(!confirm('删除这个学期的所有数据？'))return;
+  semesters=semesters.filter(s=>s.id!==id); cgpaRender();
+}
+function cgpaToggleSem(id) {
+  const s=semesters.find(s=>s.id===id); if(s){s.expanded=!s.expanded;cgpaRender();}
+}
+function cgpaRenameSem(id,val) {
+  const s=semesters.find(s=>s.id===id); if(s){s.name=val;cgpaSave();}
+}
+function cgpaAddCourse(semId) {
+  const s=semesters.find(s=>s.id===semId);
+  if(s){s.courses.push({id:++courseCounter,name:'',grade:'A',credits:3});cgpaRender();}
+}
+function cgpaDeleteCourse(semId,cId) {
+  const s=semesters.find(s=>s.id===semId);
+  if(s){s.courses=s.courses.filter(c=>c.id!==cId);cgpaRender();}
+}
+function cgpaUpdateCourse(semId,cId,field,val) {
+  const s=semesters.find(s=>s.id===semId); if(!s)return;
+  const c=s.courses.find(c=>c.id===cId); if(c){c[field]=val;cgpaUpdateStats();cgpaSave();}
+}
+function cgpaReset() {
+  if(!confirm('⚠️ 小心！\n\n确定要清空所有学期的全部数据吗？\n\n此操作无法撤销！'))return;
+  semesters=[];semCounter=0;courseCounter=0;cgpaRender();
+}
+
+const SVG_DEL_SM=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/></svg>`;
+
+const SVG_BOW=`<svg viewBox="0 0 24 16" width="18" height="12" fill="currentColor">
+  <path d="M2 1 L10 8 L2 15 C-1 12 -1 4 2 1 Z" opacity="0.8"/>
+  <path d="M22 1 L14 8 L22 15 C25 12 25 4 22 1 Z" opacity="0.8"/>
+  <circle cx="12" cy="8" r="3.5"/>
+</svg>`;
+
+function cgpaRender() {
+  const container=document.getElementById('cgpa-semesters'); if(!container)return;
+  container.innerHTML='';
+  if(semesters.length===0){
+    container.innerHTML=`<div style="text-align:center;padding:32px 20px;color:var(--text-light);font-size:13px;font-weight:700;">点击「Add Semester」开始记录你的学期成绩 ♡</div>`;
+    cgpaUpdateStats();cgpaSave();return;
+  }
+  semesters.forEach(sem=>{
+    const{gpa,credits}=calcSemGPA(sem);
+    const gpaStr=gpa!==null?gpa.toFixed(2):'—';
+    const col=gpaCol(gpa);
+    const card=document.createElement('div'); card.className='sem-card';
+    const chevronRot=sem.expanded?'rotate(0deg)':'rotate(-90deg)';
+    const headerHtml=`
+      <div class="sem-hd" onclick="cgpaToggleSem(${sem.id})">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="sem-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--pink-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <div>
+            <input class="sem-name" value="${esc(sem.name)}"
+              onclick="event.stopPropagation()" oninput="cgpaRenameSem(${sem.id},this.value)" />
+            <div style="font-size:11px;color:var(--text-light);margin-top:1px;font-weight:600;">
+              GPA: <strong style="color:${col};">${gpaStr}</strong> &nbsp;·&nbsp; ${credits} Credits
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="del-btn" onclick="event.stopPropagation();cgpaDeleteSem(${sem.id})">${SVG_DEL_SM}</button>
+          <span style="color:var(--pink-dark);display:flex;transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1);transform:${chevronRot};">${SVG_BOW}</span>
+        </div>
+      </div>`;
+    const bodyHtml=sem.expanded?`
+      <div class="sem-body">
+        <div style="display:grid;grid-template-columns:1fr 88px 78px 30px;gap:7px;padding:10px 2px 8px;">
+          <span style="font-size:10px;font-weight:800;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;">课程名称</span>
+          <span style="font-size:10px;font-weight:800;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;">等级</span>
+          <span style="font-size:10px;font-weight:800;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;">学分</span>
+          <span></span>
+        </div>
+        ${sem.courses.map(c=>`
+          <div class="c-row">
+            <input class="inp" type="text" value="${esc(c.name)}" placeholder="课程名称"
+              oninput="cgpaUpdateCourse(${sem.id},${c.id},'name',this.value)" />
+            <select class="sem-sel" onchange="cgpaUpdateCourse(${sem.id},${c.id},'grade',this.value)">
+              ${GRADE_OPTS.map(g=>`<option value="${g}"${c.grade===g?' selected':''}>${g}</option>`).join('')}
+            </select>
+            <select class="sem-sel" onchange="cgpaUpdateCourse(${sem.id},${c.id},'credits',this.value)">
+              ${CREDIT_OPTS.map(n=>`<option value="${n}"${c.credits==n?' selected':''}>${n}</option>`).join('')}
+            </select>
+            <button class="del-btn" onclick="cgpaDeleteCourse(${sem.id},${c.id})">${SVG_DEL_SM}</button>
+          </div>`).join('')}
+        <button onclick="cgpaAddCourse(${sem.id})"
+          style="color:var(--pink-dark);font-size:13px;font-weight:800;background:none;border:none;cursor:pointer;padding:7px 2px;font-family:'Nunito',sans-serif;transition:color 0.15s;"
+          onmouseover="this.style.color='var(--pink-deep)'" onmouseout="this.style.color='var(--pink-dark)'">
+          ♡ Add Class
+        </button>
+      </div>`:'' ;
+    card.innerHTML=headerHtml+bodyHtml;
+    container.appendChild(card);
+  });
+  cgpaUpdateStats(); cgpaSave();
+}
+
+function cgpaUpdateStats() {
+  const{gpa,credits,classes,latest}=calcCumulative();
+  const el=document.getElementById('cgpa-display'); if(!el)return;
+  el.textContent=gpa!==null?gpa.toFixed(2):'—'; el.style.color=gpaCol(gpa);
+  const credEl=document.getElementById('cgpa-credits');
+  const clsEl =document.getElementById('cgpa-classes');
+  const semEl =document.getElementById('cgpa-sems');
+  const latEl =document.getElementById('cgpa-latest');
+  if(credEl)credEl.textContent=credits;
+  if(clsEl) clsEl.textContent=classes;
+  if(semEl) semEl.textContent=semesters.length;
+  if(latEl){latEl.textContent=latest!==null?latest.toFixed(2):'—';latEl.style.color=gpaCol(latest);}
+}
+
+// ══════ INIT ══════
+(function(){
+  const saved=localStorage.getItem('gpa_autosave_p');
+  if(saved){try{applyState(JSON.parse(saved));}catch(e){
+    renderScalePills();renderTargetBtns();
+    addRow('Homework',20,'');addRow('Presentation',10,'');
+    addRow('Midterm',30,'');addRow('Final',40,'');
+  }}else{
+    renderScalePills();renderTargetBtns();
+    addRow('Homework',20,'');addRow('Presentation',10,'');
+    addRow('Midterm',30,'');addRow('Final',40,'');
+  }
+  renderArchives();
+  cgpaLoad(); cgpaRender();
+  const savedKey=localStorage.getItem('claude_api_key');
+  if(savedKey){const inp=document.getElementById('ai-key-input');if(inp)inp.value=savedKey;}
+})();
+</script>
+</body>
+</html>
